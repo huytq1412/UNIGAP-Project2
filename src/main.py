@@ -9,13 +9,13 @@ import concurrent.futures
 import time
 import datetime
 
-# Get current file directory
+# Lấy thư mục file hiện tại
 current_dir = os.path.dirname(__file__)
 
-# Get project root directory
+# Lấy thư mục gốc của project
 project_dir = os.path.abspath(os.path.join(current_dir, '..'))
 
-# Get file .env directory
+# Lấy thư mục file .env
 env_path = os.path.join(project_dir, '.env')
 
 if __name__ == '__main__':
@@ -51,9 +51,14 @@ if __name__ == '__main__':
     start_time = time.time()
 
     for idx, df_chunk in enumerate(reader):
-        # if idx >= 5:
+        # if idx >= 3:
         #     print(f"--- Đã kiểm tra {idx} batch, dừng chương trình ---")
         #     break
+        #
+        # if idx == 2:
+        #     print(f"--- Đang giả lập lỗi nghiêm trọng để test Restart ---")
+        #     raise Exception("Lỗi giả định do người dùng tạo!")
+
         chunk_number = idx + 1
 
         filename = f"{json_file_path}/ProductBatch{chunk_number}.json"
@@ -69,7 +74,7 @@ if __name__ == '__main__':
 
         print(f"--- Đang xử lý batch {chunk_number} ---")
 
-        # Default 15 threads to crawl data
+        # Mặc định 15 luồng để crawl dữ liệu
         workers = 15
 
         # Sử dụng concurrent.futures để có nhiều luồng thu thập crawl dữ liệu hơn
