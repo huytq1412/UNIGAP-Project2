@@ -16,6 +16,8 @@ main_path = os.path.join(current_dir, main_script)
 interpreter = sys.executable
 
 def run_with_auto_restart():
+    count_number = 1
+
     while True:
         print(f"--- Bắt đầu chạy {main_script} ---")
 
@@ -23,12 +25,14 @@ def run_with_auto_restart():
         # Chỉ khi nào main.py hoàn tất (xong việc hoặc crash), run.py mới tiếp tục chạy xuống dòng dưới
         process = subprocess.run([interpreter, main_path])
 
-        if process.returncode == 0:
+        if process.returncode == 0 or count_number > 5:
             print(f"--- Chạy {main_script} hoàn tất ---")
             break
         else:
             print(f"--- Đã gặp lỗi trong quá trình chạy {main_script}. Restart sau 10s ---")
             time.sleep(10)
+
+        count_number += 1
 
 if __name__ == "__main__":
     run_with_auto_restart()

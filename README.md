@@ -11,7 +11,7 @@ Công cụ thu thập dữ liệu sản phẩm Tiki số lượng lớn, đượ
 * Cơ chế (Auto-Restart): 
   * sử dụng subprocess để tự động khởi động lại tiến trình sau 10 giây nếu gặp sự cố (Crash/Mất mạng) thông qua script giám sát `run.py`.
   * Tự thử lại tối đa 5 lần khi gặp sự cố.
-* Cơ chế (Resume): Tự động bỏ qua các Batch đã tải xong. Nếu chương trình bị ngắt, lần sau chạy lại sẽ tiếp tục ngay tại điểm dừng (không crawl lại từ đầu).
+* Cơ chế (Resume): Nếu chương trình bị ngắt, lần sau chạy lại sẽ loại trừ danh sách các id đã crawl thành công và tiếp tục tại batch dừng (không crawl lại từ đầu). Tự động bỏ qua các Batch đã tải xong. 
 *  Dữ liệu sạch:
     * Tự động loại bỏ thẻ HTML
     * Chuẩn hóa xuống dòng (`\n`).

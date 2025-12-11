@@ -1,10 +1,12 @@
 from dotenv import load_dotenv
 import pandas as pd
 import os
+import json
 from get_product import get_product_detail
 from add_error import add_error_list
 from retry_error_product import  retry_error_product
 from fake_useragent import UserAgent
+from get_successed_product import get_successed_id
 import concurrent.futures
 import time
 import datetime
@@ -50,11 +52,14 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
+    # Lấy danh sách Id đã hoàn thành
+    successed_ids = get_successed_id(json_file_path)
+
     for idx, df_chunk in enumerate(reader):
         # if idx >= 3:
         #     print(f"--- Đã kiểm tra {idx} batch, dừng chương trình ---")
         #     break
-        #
+
         # if idx == 2:
         #     print(f"--- Đang giả lập lỗi nghiêm trọng để test Restart ---")
         #     raise Exception("Lỗi giả định do người dùng tạo!")
@@ -63,9 +68,29 @@ if __name__ == '__main__':
 
         filename = f"{json_file_path}/ProductBatch{chunk_number}.json"
 
+        pending_ids = []
+
+        for id in df_chunk['id']:
+            if id not in successed_ids:
+                pending_ids.append(id)
+
+        if not pending_ids:
+            print(f"Batch {chunk_number} đã hoàn thành đủ. Skip.")
+            continue
+
         # Kiểm tra nếu file đã tồn tại thì bỏ qua
         if os.path.exists(filename):
-            print(f"Batch {chunk_number} đã tồn tại. Bỏ qua.")
+            print(f"Batch {chunk_number} đã tồn tại. ")
+            try:
+                with open(filename, 'r', encoding='utf-8') as f:
+                    existing_data = json.load(f)
+
+                count_existing = len(existing_data)
+
+                print(f"Batch {chunk_number} bao gồm {count_existing} sản phẩm")
+            except Exception as e:
+                print(f"Batch {chunk_number} tồn tại nhưng file bị lỗi (không đọc được JSON): {e}. Bỏ qua.")
+
             continue
 
         product_detail_list = [] # List chứa thông tin các sản phẩm crawl dược
@@ -84,7 +109,7 @@ if __name__ == '__main__':
             list_futures = []
 
             # Duyệt qua từng id của batch hiện tại rồi thêm dữ liệu các future vào danh sách
-            for id in df_chunk['id']:
+            for id in pending_ids:
                 future = executor.submit(get_product_detail, id, agent)
 
                 list_futures.append(future)
