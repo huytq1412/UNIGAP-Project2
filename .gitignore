@@ -7,3 +7,7 @@
 
 # Python cache
 __pycache__/
+
+# Files created
+errorfile/
+jsonfile/

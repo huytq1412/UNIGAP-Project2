@@ -74,8 +74,8 @@ if __name__ == '__main__':
 
         print(f"--- Đang xử lý batch {chunk_number} ---")
 
-        # Mặc định 15 luồng để crawl dữ liệu
-        workers = 15
+        # Mặc định 30 luồng để crawl dữ liệu
+        workers = 30
 
         # Sử dụng concurrent.futures để có nhiều luồng thu thập crawl dữ liệu hơn
         # Khởi tạo bể chứa các luồng

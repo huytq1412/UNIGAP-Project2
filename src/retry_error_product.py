@@ -19,6 +19,11 @@ def retry_error_product(client_errorfile, server_errorfile, error_file_path, jso
             if os.path.exists(client_errorfile):
                 os.remove(client_errorfile)
             break
+        # Vượt quá số lần thử lại cho phép
+        elif count_number > 5:
+            print(f"Đã vượt quá {count_number} lần thử lại, dừng crawl lại dữ liệu tại đây")
+            break
+
 
         print(f"\n=== Bắt đầu crawl lại danh sách các id bị lỗi lần thứ {count_number} ===")
 
@@ -50,7 +55,7 @@ def retry_error_product(client_errorfile, server_errorfile, error_file_path, jso
         client_error_list = []  # List các product id lỗi trong quá trình crawl dữ liệu
 
         # Default 15 threads to crawl data
-        workers = 15
+        workers = 30
 
         # Sử dụng concurrent.futures để có nhiều luồng thu thập crawl dữ liệu hơn
         # Khởi tạo bể chứa các luồng
