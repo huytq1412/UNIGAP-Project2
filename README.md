@@ -2,7 +2,7 @@
 
 Công cụ thu thập dữ liệu sản phẩm Tiki số lượng lớn, được tối ưu hóa cho tốc độ, độ ổn định.
 
-![Python](https://img.shields.io/badge/Python-3.0%2B-blue) ![Status](https://img.shields.io/badge/Status-Completed-success)
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue) ![Status](https://img.shields.io/badge/Status-Completed-success)
 
 ## Tính năng
 
