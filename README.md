@@ -51,6 +51,7 @@ Project2/
 │                                       DATA_PATH(đường dẫn lưu file csv),
 │                                       JSON_FILE_PATH(đường dẫn kết xuất các file json),
 │                                       ERROR_FILE_PATH(đường dẫn kết xuất các file chứa Id sản phẩm lỗi)
+│                                       DATABASE_CONN_FILE(đường dẫn lưu thông tin kết nối database)
 ├── .gitignore                      # File loại trừ khi đẩy lên git
 ├── requirements.txt                # Các thư viện cần cài
 └── README.md                       # Tài liệu hướng dẫn sử dụng
