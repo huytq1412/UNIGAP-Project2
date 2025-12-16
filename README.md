@@ -16,31 +16,44 @@ Công cụ thu thập dữ liệu sản phẩm Tiki số lượng lớn, đượ
     * Tự động loại bỏ thẻ HTML
     * Chuẩn hóa xuống dòng (`\n`).
 * Chống chặn: Sử dụng `fake-useragent` để xoay vòng danh tính, tránh việc request quá nhiều lên server từ một nguồn sẽ dễ bị chặn
-
+* Load: Tải vào PostgreSQL với cơ chế Upsert (Cập nhật nếu tồn tại, Thêm mới nếu chưa) và Transaction (Rollback nếu có lỗi) để đảm bảo tính toàn vẹn dữ liệu.
 
 Cấu trúc của Project2
 
 ```
 Project2/
+├── config/
+│   ├── __init__.py
+│   ├── config.py                   # Đọc và thiết lập kết nối tới database
+│   └── database.ini                # Thông tin kết nối tới database (không đẩy lên git)
 ├── data/
-│   └── products-0-200000.csv   # File input dữ liệu danh sách Id các sản phẩm của Tiki 
+│   ├── raw/                        # Chứa file 'products-0-200000.csv'
+│   │   └── products-0-200000.csv   # File input dữ liệu danh sách Id các sản phẩm của Tiki 
+│   └── processed/                  # Thư mục chứa các file output của các sản phẩm 
+│       ├── jsonfile/               # Thư mục chứa các file output của các sản phẩm crawl thành công (không đẩy lên git)
+│       └── errorfile/              # Thư mục chứa các file output là các Id của sản phẩm crawl gặp lỗi (không đẩy lên git)
+├── etl/
+│   ├── extract/ 
+│   │   ├── __init__.py
+│   │   └── get_product.py          # Crawl dữ liệu chi tiết từng sản phẩm và làm sạch description
+│   └── load
+│       ├── __init__.py
+│       └── load_data.py            # Tạo bảng và đẩy dữ liệu vào database
 ├── src/
 │   ├── __init__.py
-│   ├── add_error.py            # Xử lý ghi dữ liệu vào file
-│   ├── get_product.py          # Crawl dữ liệu chi tiết từng sản phẩm và làm sạch description
-│   ├── retry_error_product.py  # Crawl lại dữ liệu danh sách các id bị lỗi từ phía client
-│   ├── main.py                 # Đọc CSV input, crawl đa luồng, xử lý dữ liệu và đẩy vào các file ouput
-│   └── run.py                  # Chạy toàn bộ project xử lý có hỗ trợ auto restart
-├── jsonfile/                   # Thư mục chứa các file output của các sản phẩm crawl thành công (không đẩy lên git)
-├── errorfile/                  # Thư mục chứa các file output là các Id của sản phẩm crawl gặp lỗi (không đẩy lên git)
-├── .env                        # Các biến môi trường (không đẩy lên git)
-│                               Bao gồm các biến để kết nối PostgreSQL,
+│   ├── add_error.py                # Xử lý ghi dữ liệu vào file
+│   ├── get_successed_product.py    # Lấy list tất cả các Id đã được crawl thành công
+│   ├── retry_error_product.py      # Crawl lại dữ liệu danh sách các id bị lỗi từ phía client
+│   ├── main.py                     # Đọc CSV input, crawl đa luồng, xử lý dữ liệu và đẩy vào các file ouput
+│   └── run.py                      # Chạy toàn bộ project xử lý có hỗ trợ auto restart
+├── .env                            # Các biến môi trường (không đẩy lên git)
+│                                   Bao gồm các biến để kết nối PostgreSQL,
 │                                       DATA_PATH(đường dẫn lưu file csv),
 │                                       JSON_FILE_PATH(đường dẫn kết xuất các file json),
 │                                       ERROR_FILE_PATH(đường dẫn kết xuất các file chứa Id sản phẩm lỗi)
-├── .gitignore                # File loại trừ khi đẩy lên git
-├── requirements.txt          # Các thư viện cần cài
-└── README.md                 # Tài liệu hướng dẫn sử dụng
+├── .gitignore                      # File loại trừ khi đẩy lên git
+├── requirements.txt                # Các thư viện cần cài
+└── README.md                       # Tài liệu hướng dẫn sử dụng
 ```
 
 ## Cài đặt & Cấu hình
@@ -70,6 +83,18 @@ Tạo file .env tại thư mục gốc và điền thông tin tương ứng:
 DATA_PATH = "~/UNIGAP/Project2/data"
 JSON_FILE_PATH = "~/UNIGAP/Project2/jsonfile"
 ERROR_FILE_PATH = "~/UNIGAP/Project2/errorfile"
+DATABASE_CONN_FILE = "~/UNIGAP/Project2/config/database.ini"
+```
+
+4. Cấu hình kết nối tới database. Tạo file database.ini và điền thông tin tương ứng
+```
+# Đường dẫn dữ liệu 
+[postgresql]
+host=localhost
+port=5432
+database=yourDB
+user=youruser
+password=yourpassword
 ```
 
 ## Hướng dẫn sử dụng

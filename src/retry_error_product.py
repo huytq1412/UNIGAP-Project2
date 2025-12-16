@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from get_product import get_product_detail
+from etl.extract.get_product import get_product_detail
 from add_error import add_error_list
 import concurrent.futures
 

@@ -2,14 +2,15 @@ from dotenv import load_dotenv
 import pandas as pd
 import os
 import json
-from get_product import get_product_detail
+from etl.extract.get_product import get_product_detail
 from add_error import add_error_list
-from retry_error_product import  retry_error_product
+from retry_error_product import retry_error_product
 from fake_useragent import UserAgent
 from get_successed_product import get_successed_id
 import concurrent.futures
 import time
 import datetime
+from etl.load.load_data import create_table, insert_data
 
 # Lấy thư mục file hiện tại
 current_dir = os.path.dirname(__file__)
@@ -150,3 +151,9 @@ if __name__ == '__main__':
 
     # Crawl lại dữ liệu danh sách các id bị lỗi từ phía client
     retry_error_product(client_errorfile, server_errorfile, error_file_path, json_file_path, agent)
+
+    # Tạo bảng dữ liệu trong PostgreSQL
+    create_table()
+
+    # Insert dữ liệu vào trong PostgreSQL
+    insert_data(json_file_path)

@@ -2,6 +2,9 @@
 .venv/
 .env
 
+# Database connection
+config/database.ini
+
 # PyCharm specific settings
 .idea/
 
@@ -9,6 +12,6 @@
 __pycache__/
 
 # Files created
-errorfile/
+data/processed/
 jsonfile/
 test_retry.py

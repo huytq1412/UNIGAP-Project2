@@ -1,6 +1,6 @@
 import glob
 import os
-import  json
+import json
 
 def get_successed_id(json_file_path):
     successed_ids = set()
@@ -24,4 +24,3 @@ def get_successed_id(json_file_path):
 
     return successed_ids
 
-# get_successed_id('/home/huytq/UNIGAP/Project2/jsonfile')
