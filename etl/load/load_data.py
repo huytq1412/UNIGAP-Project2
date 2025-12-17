@@ -181,7 +181,7 @@ def insert_data(json_file_path):
 current_dir = os.path.dirname(__file__)
 
 # Lấy thư mục gốc của project
-project_dir = os.path.abspath(os.path.join(current_dir, '..'))
+project_dir = os.path.abspath(os.path.join(current_dir, '../..'))
 
 # Lấy thư mục file .env
 env_path = os.path.join(project_dir, '.env')
